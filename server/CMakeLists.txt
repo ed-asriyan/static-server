@@ -16,6 +16,7 @@ set(SOURCE_FILES
         Request.hpp
         RequestParser.cpp RequestParser.hpp
         Response.cpp Response.hpp
+        FileHandler.cpp FileHandler.hpp
         )
 
 add_library(server STATIC ${SOURCE_FILES})

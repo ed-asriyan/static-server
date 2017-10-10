@@ -5,7 +5,12 @@
 #include "Server.hpp"
 #include <boost/asio/yield.hpp>
 
-server::Server::Server(boost::asio::io_service& io_service, const std::string& address, const std::string& port) {
+server::Server::Server(
+	boost::asio::io_service& io_service,
+	const std::string& address,
+	const std::string& port,
+	boost::function<void(const Request&, Response&)> request_handler
+) : request_handler(request_handler) {
 	tcp::resolver resolver(io_service);
 	tcp::resolver::query query(address, port);
 	acceptor.reset(new tcp::acceptor(io_service, *resolver.resolve(query)));
@@ -39,7 +44,7 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 		response.reset(new Response);
 
 		if (valid_request) {
-			*response = Response::stock_reply(Response::not_found);
+			request_handler(*request, *response);
 		} else {
 			*response = Response::stock_reply(Response::bad_request);
 		}

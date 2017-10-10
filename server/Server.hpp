@@ -21,7 +21,8 @@ namespace server {
 		explicit Server(
 			boost::asio::io_service& io_service,
 			const std::string& address,
-			const std::string& port
+			const std::string& port,
+			boost::function<void(const Request&, Response&)> request_handler
 		);
 
 		void operator()(
@@ -43,6 +44,8 @@ namespace server {
 		boost::tribool valid_request;
 
 		boost::shared_ptr<Response> response;
+
+		boost::function<void(const Request&, Response&)> request_handler;
 	};
 }
 

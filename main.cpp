@@ -4,6 +4,7 @@
 #include <boost/bind.hpp>
 
 #include "server/Server.hpp"
+#include "server/FileHandler.hpp"
 
 int main(int argc, char* argv[]) {
 	try {
@@ -18,7 +19,7 @@ int main(int argc, char* argv[]) {
 
 		boost::asio::io_service io_service;
 
-		server::Server(io_service, argv[1], argv[2])();
+		server::Server(io_service, argv[1], argv[2], server::FileHandler(argv[3]))();
 
 		boost::asio::signal_set signals(io_service);
 		signals.add(SIGINT);
