@@ -12,6 +12,7 @@ include_directories(${Boost_INCLUDE_DIR})
 
 set(SOURCE_FILES
         Server.cpp Server.hpp
+        Header.hpp
         )
 
 add_library(server STATIC ${SOURCE_FILES})
