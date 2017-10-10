@@ -13,6 +13,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "RequestParser.hpp"
+#include "Response.hpp"
 
 namespace server {
 	class Server : boost::asio::coroutine {
@@ -40,6 +41,8 @@ namespace server {
 		RequestParser request_parser;
 		boost::shared_ptr<Request> request;
 		boost::tribool valid_request;
+
+		boost::shared_ptr<Response> response;
 	};
 }
 

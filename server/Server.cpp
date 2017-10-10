@@ -34,9 +34,17 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 				buffer->data(),
 				buffer->data() + length
 			);
-
-			yield socket->async_write_some(boost::asio::buffer(*buffer), *this);
 		} while (boost::indeterminate(valid_request));
+
+		response.reset(new Response);
+
+		if (valid_request) {
+			*response = Response::stock_reply(Response::not_found);
+		} else {
+			*response = Response::stock_reply(Response::bad_request);
+		}
+
+		yield boost::asio::async_write(*socket, response->to_buffers(), *this);
 
 		socket->shutdown(tcp::socket::shutdown_both, ec);
 	}
