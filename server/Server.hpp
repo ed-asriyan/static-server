@@ -12,6 +12,8 @@
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "RequestParser.hpp"
+
 namespace server {
 	class Server : boost::asio::coroutine {
 	public:
@@ -34,6 +36,10 @@ namespace server {
 		boost::shared_ptr<tcp::acceptor> acceptor;
 		boost::shared_ptr<tcp::socket> socket;
 		boost::shared_ptr<boost::array<char, Server::BUFFER_SIZE>> buffer;
+
+		RequestParser request_parser;
+		boost::shared_ptr<Request> request;
+		boost::tribool valid_request;
 	};
 }
 

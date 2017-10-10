@@ -24,13 +24,20 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 		} while (is_parent());
 
 		buffer.reset(new boost::array<char, Server::BUFFER_SIZE>);
+		request.reset(new Request);
 
 		do {
 			yield socket->async_read_some(boost::asio::buffer(*buffer), *this);
-			yield socket->async_write_some(boost::asio::buffer(*buffer), *this);
-		} while (buffer.operator*()[0] != '.');
 
-		yield boost::asio::async_write(*socket, boost::asio::buffer("end\n", 5), *this);
+			boost::tie(valid_request, boost::tuples::ignore) = request_parser.parse(
+				*request,
+				buffer->data(),
+				buffer->data() + length
+			);
+
+			yield socket->async_write_some(boost::asio::buffer(*buffer), *this);
+		} while (boost::indeterminate(valid_request));
+
 		socket->shutdown(tcp::socket::shutdown_both, ec);
 	}
 }

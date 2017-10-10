@@ -13,8 +13,9 @@ include_directories(${Boost_INCLUDE_DIR})
 set(SOURCE_FILES
         Server.cpp Server.hpp
         Header.hpp
-        )
         Request.hpp
+        RequestParser.cpp RequestParser.hpp
+        )
 
 add_library(server STATIC ${SOURCE_FILES})
 target_link_libraries(server ${Boost_LIBRARIES})
