@@ -13,6 +13,7 @@
 
 #include "Response.hpp"
 #include "Request.hpp"
+#include "mime_types.hpp"
 
 namespace server {
 	class FileHandler {

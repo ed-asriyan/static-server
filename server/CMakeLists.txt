@@ -17,6 +17,7 @@ set(SOURCE_FILES
         RequestParser.cpp RequestParser.hpp
         Response.cpp Response.hpp
         FileHandler.cpp FileHandler.hpp
+        mime_types.cpp mime_types.hpp
         )
 
 add_library(server STATIC ${SOURCE_FILES})

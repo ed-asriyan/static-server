@@ -54,7 +54,7 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 	rep.headers[0].name = "Content-Length";
 	rep.headers[0].value = std::to_string(rep.content.size());
 	rep.headers[1].name = "Content-Type";
-	rep.headers[1].value = "THE-STUB";
+	rep.headers[1].value = server::extension_to_type(extension);
 }
 
 bool server::FileHandler::url_decode(const std::string& in, std::string& out) {
