@@ -21,6 +21,9 @@ namespace server {
 		const std::string not_found =
 			"HTTP/1.0 404 Not Found\r\n";
 
+		const std::string method_not_allowed =
+			"HTTP/1.0 405 Method Not Allowed\r\n";
+
 		const std::string internal_server_error =
 			"HTTP/1.0 500 Internal Server Error\r\n";
 
@@ -32,6 +35,8 @@ namespace server {
 					return boost::asio::buffer(bad_request);
 				case Response::not_found:
 					return boost::asio::buffer(not_found);
+				case Response::method_not_allowed:
+					return boost::asio::buffer(method_not_allowed);
 				default:
 					return boost::asio::buffer(internal_server_error);
 			}
@@ -45,6 +50,8 @@ namespace server {
 
 		const char not_found[] = "404 Not Found";
 
+		const char method_not_allowed[] = "405 Method Not Allowed";
+
 		const char internal_server_error[] = "500 Internal Server Error";
 
 		std::string to_string(Response::status_type status) {
@@ -55,6 +62,8 @@ namespace server {
 					return bad_request;
 				case Response::not_found:
 					return not_found;
+				case Response::method_not_allowed:
+					return method_not_allowed;
 				case Response::internal_server_error:
 					return internal_server_error;
 				default:

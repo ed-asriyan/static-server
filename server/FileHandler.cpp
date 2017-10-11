@@ -10,6 +10,11 @@ server::FileHandler::FileHandler(const std::string& doc_root)
 }
 
 void server::FileHandler::operator()(const server::Request& req, server::Response& rep) {
+    if (req.method != HEAD_METHOD && req.method != GET_METHOD) {
+	    rep = Response::stock_reply(Response::method_not_allowed);
+	    return;
+    }
+
 	// decode url to path.
 	std::string request_path;
 	if (!url_decode(req.uri, request_path)) {
