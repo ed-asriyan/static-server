@@ -10,10 +10,10 @@ server::FileHandler::FileHandler(const std::string& doc_root)
 }
 
 void server::FileHandler::operator()(const server::Request& req, server::Response& rep) {
-    if (req.method != HEAD_METHOD && req.method != GET_METHOD) {
-	    rep = Response::stock_reply(Response::method_not_allowed);
-	    return;
-    }
+	if (req.method != HEAD_METHOD && req.method != GET_METHOD) {
+		rep = Response::stock_reply(Response::method_not_allowed);
+		return;
+	}
 
 	// decode url to path.
 	std::string request_path;
@@ -52,12 +52,21 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// fill out the reply to be sent to the client.
 	rep.status = Response::ok;
-	char buf[512];
-	while (is.read(buf, sizeof(buf)).gcount() > 0)
-		rep.content.append(buf, is.gcount());
+	size_t file_size = rep.content.size();
+
+	if (req.method == GET_METHOD) {
+		char buf[512];
+		while (is.read(buf, sizeof(buf)).gcount() > 0) {
+			rep.content.append(buf, is.gcount());
+		}
+		file_size = rep.content.size();
+	} else if (req.method == HEAD_METHOD) {
+		is.seekg(0, std::ios::end);
+		file_size = static_cast<size_t>(is.tellg()) - file_size;
+	}
 	rep.headers.resize(2);
 	rep.headers[0].name = "Content-Length";
-	rep.headers[0].value = std::to_string(rep.content.size());
+	rep.headers[0].value = std::to_string(file_size);
 	rep.headers[1].name = "Content-Type";
 	rep.headers[1].value = server::extension_to_type(extension);
 }
