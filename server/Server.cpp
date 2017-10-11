@@ -49,6 +49,8 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 			*response = Response::stock_reply(Response::bad_request);
 		}
 
+		Response::normalize_headers(*response);
+
 		yield boost::asio::async_write(*socket, response->to_buffers(), *this);
 
 		socket->shutdown(tcp::socket::shutdown_both, ec);

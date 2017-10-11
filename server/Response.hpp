@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
@@ -28,6 +29,8 @@ namespace server {
 		std::vector<boost::asio::const_buffer> to_buffers();
 
 		static Response stock_reply(status_type status);
+
+		static void normalize_headers(Response& response);
 	};
 }
 

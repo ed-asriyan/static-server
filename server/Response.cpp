@@ -4,6 +4,12 @@
 
 #include "Response.hpp"
 
+std::string current_date() {
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+	return std::ctime(&now_time);
+}
+
 namespace server {
 	namespace status_strings {
 		const std::string ok =
@@ -88,5 +94,11 @@ namespace server {
 		rep.headers[1].name = "Content-Type";
 		rep.headers[1].value = "text/html";
 		return rep;
+	}
+
+	void Response::normalize_headers(Response& response) {
+		response.headers.push_back({"Server", "static-server-on-boost-coroutines"});
+		response.headers.push_back({"Connection", "Close"});
+		response.headers.push_back({"Date", current_date()});
 	}
 }
