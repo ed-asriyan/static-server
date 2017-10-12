@@ -54,7 +54,6 @@ boost::tribool server::RequestParser::consume(server::Request& req, char c) {
 		req.uri.clear();
 		req.http_version_major = 0;
 		req.http_version_minor = 0;
-		req.headers.clear();
 
 		// request method
 		while (is_char(c) && !is_ctl(c) && !is_special(c) && c != ' ') {
@@ -116,48 +115,7 @@ boost::tribool server::RequestParser::consume(server::Request& req, char c) {
 		if (c != '\n') return false;
 		yield return boost::indeterminate;
 
-		// headers
-		while ((is_char(c) && !is_ctl(c) && !is_special(c) && c != '\r') || (c == ' ' || c == '\t')) {
-			if (c == ' ' || c == '\t') {
-				// leading whitespace, must be continuation of previous header's value
-				if (req.headers.empty()) return false;
-				while (c == ' ' || c == '\t')
-					yield return boost::indeterminate;
-			} else {
-				// start the next header
-				req.headers.push_back(Header());
-
-				// header name
-				while (is_char(c) && !is_ctl(c) && !is_special(c) && c != ':') {
-					req.headers.back().name.push_back(c);
-					yield return boost::indeterminate;
-				}
-
-				// colon and space separates the header name from the header value
-				if (c != ':') return false;
-				yield return boost::indeterminate;
-				if (c != ' ') return false;
-				yield return boost::indeterminate;
-			}
-
-			// header value
-			while (is_char(c) && !is_ctl(c) && c != '\r') {
-				req.headers.back().value.push_back(c);
-				yield return boost::indeterminate;
-			}
-
-			// CRLF
-			if (c != '\r') return false;
-			yield return boost::indeterminate;
-			if (c != '\n') return false;
-			yield return boost::indeterminate;
-		}
-
-		// CRLF
-		if (c != '\r') return false;
-		yield return boost::indeterminate;
-		if (c != '\n') return false;
-
+		// request headers are not supported
 		// request body is not supported
 	}
 
