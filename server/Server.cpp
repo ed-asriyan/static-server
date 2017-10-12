@@ -30,23 +30,22 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 
 		buffer.reset(new boost::array<char, Server::BUFFER_SIZE>);
 		request.reset(new Request);
+		response.reset(new Response);
 
 		do {
 			yield socket->async_read_some(boost::asio::buffer(*buffer), *this);
 
-			boost::tie(valid_request, boost::tuples::ignore) = request_parser.parse(
+			boost::tie(request_handled, parser_status_type) = request_parser.parse(
 				*request,
 				buffer->data(),
 				buffer->data() + length
 			);
-		} while (boost::indeterminate(valid_request));
+		} while (!request_handled);
 
-		response.reset(new Response);
-
-		if (valid_request) {
+		if (parser_status_type == Response::status_type::ok) {
 			request_handler(*request, *response);
 		} else {
-			*response = Response::stock_reply(Response::bad_request);
+			*response = Response::stock_reply(parser_status_type);
 		}
 
 		Response::normalize_headers(*response);
