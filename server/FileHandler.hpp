@@ -24,8 +24,6 @@ namespace server {
 
 	private:
 		std::string doc_root;
-
-		static bool url_decode(const std::string& in, std::string& out);
 	};
 }
 

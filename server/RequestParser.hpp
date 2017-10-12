@@ -36,6 +36,8 @@ namespace server {
 
 	private:
 		boost::tuple<bool, Response::status_type> consume(Request& req, char input);
+
+		std::string source_uri;
 	};
 }
 

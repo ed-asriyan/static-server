@@ -54,6 +54,32 @@ inline bool to_lower_compare(char a, char b) {
 	return std::tolower(a) == std::tolower(b);
 }
 
+bool uri_decode(const std::string& in, std::string& out) {
+	out.clear();
+	out.reserve(in.size());
+	for (std::size_t i = 0; i < in.size(); ++i) {
+		if (in[i] == '%') {
+			if (i + 3 <= in.size()) {
+				int value = 0;
+				std::istringstream is(in.substr(i + 1, 2));
+				if (is >> std::hex >> value) {
+					out += static_cast<char>(value);
+					i += 2;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else if (in[i] == '+') {
+			out += ' ';
+		} else {
+			out += in[i];
+		}
+	}
+	return true;
+}
+
 boost::tuple<bool, server::Response::status_type> server::RequestParser::consume(server::Request& req, char c) {
 	reenter (this) {
 		req.uri.clear();
@@ -85,10 +111,13 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 		yield RETURN_UNHANDLED;
 
 		// URI
+		source_uri.clear();
 		while (!is_ctl(c) && c != ' ') {
-			req.uri.push_back(c);
+			source_uri.push_back(c);
 			yield RETURN_UNHANDLED;
 		}
+		if (source_uri.empty()) RETURN_BAD_REQUEST;
+		if (!uri_decode(source_uri, req.uri)) RETURN_BAD_REQUEST;
 		if (req.uri.empty()) RETURN_BAD_REQUEST;
 
 		// space

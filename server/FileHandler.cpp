@@ -19,12 +19,8 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 			return;
 	}
 
-	// decode url to path.
-	std::string request_path;
-	if (!url_decode(req.uri, request_path)) {
-		rep = Response::stock_reply(Response::bad_request);
-		return;
-	}
+	// copy url to path.
+	std::string request_path = req.uri;
 
 	// request path must be absolute and not contain "..".
 	if (request_path.empty() || request_path[0] != '/'
@@ -73,30 +69,4 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 	rep.headers[0].value = std::to_string(file_size);
 	rep.headers[1].name = "Content-Type";
 	rep.headers[1].value = server::extension_to_type(extension);
-}
-
-bool server::FileHandler::url_decode(const std::string& in, std::string& out) {
-	out.clear();
-	out.reserve(in.size());
-	for (std::size_t i = 0; i < in.size(); ++i) {
-		if (in[i] == '%') {
-			if (i + 3 <= in.size()) {
-				int value = 0;
-				std::istringstream is(in.substr(i + 1, 2));
-				if (is >> std::hex >> value) {
-					out += static_cast<char>(value);
-					i += 2;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		} else if (in[i] == '+') {
-			out += ' ';
-		} else {
-			out += in[i];
-		}
-	}
-	return true;
 }
