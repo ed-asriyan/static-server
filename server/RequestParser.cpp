@@ -56,17 +56,29 @@ inline bool to_lower_compare(char a, char b) {
 
 boost::tuple<bool, server::Response::status_type> server::RequestParser::consume(server::Request& req, char c) {
 	reenter (this) {
-		req.method.clear();
 		req.uri.clear();
 		req.http_version_major = 0;
 		req.http_version_minor = 0;
 
-		// request method
-		while (is_char(c) && !is_ctl(c) && !is_special(c) && c != ' ') {
-			req.method.push_back(c);
-			yield RETURN_UNHANDLED;;
-		}
-		if (req.method.empty()) RETURN_METHOD_NOT_ALLOWED;
+		if (c == 'G') {
+			yield RETURN_UNHANDLED;
+			if (c != 'E') RETURN_METHOD_NOT_ALLOWED;
+			yield RETURN_UNHANDLED;
+			if (c != 'T') RETURN_METHOD_NOT_ALLOWED;
+			yield RETURN_UNHANDLED;
+
+			req.method = Request::method::GET;
+		} else if (c == 'H') {
+			yield RETURN_UNHANDLED;
+			if (c != 'E') RETURN_METHOD_NOT_ALLOWED;
+			yield RETURN_UNHANDLED;
+			if (c != 'A') RETURN_METHOD_NOT_ALLOWED;
+			yield RETURN_UNHANDLED;
+			if (c != 'D') RETURN_METHOD_NOT_ALLOWED;
+			yield RETURN_UNHANDLED;
+
+			req.method = Request::method::HEAD;
+		} else RETURN_METHOD_NOT_ALLOWED;
 
 		// space
 		if (c != ' ') RETURN_BAD_REQUEST;

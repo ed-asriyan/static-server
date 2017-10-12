@@ -10,9 +10,13 @@ server::FileHandler::FileHandler(const std::string& doc_root)
 }
 
 void server::FileHandler::operator()(const server::Request& req, server::Response& rep) {
-	if (req.method != HEAD_METHOD && req.method != GET_METHOD) {
-		rep = Response::stock_reply(Response::method_not_allowed);
-		return;
+	switch (req.method) {
+		case Request::method::GET:
+		case Request::method::HEAD:
+			break;
+		default:
+			rep = Response::stock_reply(Response::method_not_allowed);
+			return;
 	}
 
 	// decode url to path.
@@ -54,13 +58,13 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 	rep.status = Response::ok;
 	size_t file_size = rep.content.size();
 
-	if (req.method == GET_METHOD) {
+	if (req.method == Request::method::GET) {
 		char buf[512];
 		while (is.read(buf, sizeof(buf)).gcount() > 0) {
 			rep.content.append(buf, is.gcount());
 		}
 		file_size = rep.content.size();
-	} else if (req.method == HEAD_METHOD) {
+	} else if (req.method == Request::method::HEAD) {
 		is.seekg(0, std::ios::end);
 		file_size = static_cast<size_t>(is.tellg()) - file_size;
 	}

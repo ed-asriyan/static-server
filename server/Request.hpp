@@ -10,7 +10,10 @@
 
 namespace server {
 	struct Request {
-		std::string method;
+		enum method {
+			GET,
+			HEAD,
+		} method;
 		std::string uri;
 		int http_version_major;
 		int http_version_minor;
