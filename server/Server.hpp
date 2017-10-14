@@ -20,8 +20,7 @@ namespace server {
 	public:
 		explicit Server(
 			boost::asio::io_service& io_service,
-			const std::string& address,
-			const std::string& port,
+			unsigned short port,
 			boost::function<void(const Request&, Response&)> request_handler
 		);
 
@@ -41,11 +40,15 @@ namespace server {
 
 		RequestParser request_parser;
 		boost::shared_ptr<Request> request;
-		boost::tribool valid_request;
+		Response::status_type parser_status_type;
+		bool request_handled;
 
 		boost::shared_ptr<Response> response;
 
 		boost::function<void(const Request&, Response&)> request_handler;
+
+		// temp
+		std::streamsize response_sent;
 	};
 }
 

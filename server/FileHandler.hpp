@@ -23,12 +23,7 @@ namespace server {
 		void operator()(const Request& req, Response& rep);
 
 	private:
-		static constexpr const char* HEAD_METHOD = "HEAD";
-		static constexpr const char* GET_METHOD = "GET";
-
 		std::string doc_root;
-
-		static bool url_decode(const std::string& in, std::string& out);
 	};
 }
 

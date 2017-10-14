@@ -13,28 +13,31 @@
 #include <boost/lexical_cast.hpp>
 
 #include "Request.hpp"
+#include "Response.hpp"
 
 namespace server {
 	class RequestParser : boost::asio::coroutine {
 	public:
 		template<typename InputIterator>
-		boost::tuple<boost::tribool, InputIterator> parse(
+		boost::tuple<bool, Response::status_type> parse(
 			Request& req,
 			InputIterator begin,
 			InputIterator end
 		) {
 			while (begin != end) {
-				boost::tribool result = consume(req, *begin++);
-				if (result || !result) {
-					return boost::make_tuple(result, begin);
+				auto result = consume(req, *begin++);
+				int  u = 0;
+				if (boost::get<0>(result)) {
+					return result;
 				}
 			}
-			boost::tribool result = boost::indeterminate;
-			return boost::make_tuple(result, begin);
+			return boost::make_tuple(false, Response::status_type::ok);
 		}
 
 	private:
-		boost::tribool consume(Request& req, char input);
+		boost::tuple<bool, Response::status_type> consume(Request& req, char input);
+
+		std::string source_uri;
 	};
 }
 
