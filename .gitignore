@@ -1,3 +1,6 @@
+# Created by https://www.gitignore.io/api/c++,cmake,clion
+
+### C++ ###
 # Prerequisites
 *.d
 
@@ -31,6 +34,53 @@
 *.out
 *.app
 
-# idea
+# CMake
+cmake-build-debug/
+cmake-build-release/
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+.idea/replstate.xml
+
+# Ruby plugin and RubyMine
+/.rakeTasks
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+### CLion ###
 .idea
-cmake-build-debug
+
+
+### CMake ###
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+build
+
+# End of https://www.gitignore.io/api/c++,cmake,clion
+
+static_server
+*.cbp
