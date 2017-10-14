@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -29,7 +30,14 @@ int main(int argc, char* argv[]) {
 #endif // defined(SIGQUIT)
 		signals.async_wait(boost::bind(&boost::asio::io_service::stop, &io_service));
 
-		io_service.run();
+		std::vector<std::thread> pool;
+		for (auto threadCount = std::thread::hardware_concurrency(); threadCount; --threadCount) {
+			pool.emplace_back([](auto io_s) { return io_s->run(); }, &io_service);
+		}
+
+		for (auto& thread : pool)
+			thread.join();
+
 	} catch (std::exception& e) {
 		std::cerr << "exception: " << e.what() << std::endl;
 	}
