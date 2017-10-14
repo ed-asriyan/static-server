@@ -9,18 +9,15 @@
 
 int main(int argc, char* argv[]) {
 	try {
-		if (argc != 4) {
-			std::cerr << "Usage: http_server <address> <port> <doc_root>\n";
-			std::cerr << "  For IPv4, try:\n";
-			std::cerr << "    receiver 0.0.0.0 80 .\n";
-			std::cerr << "  For IPv6, try:\n";
-			std::cerr << "    receiver 0::0 80 .\n";
+		if (argc != 3) {
+			std::cerr << "Usage: http_server <port> <doc_root>" << std::endl;
+			std::cerr << "    receiver 80 ." << std::endl;
 			return 1;
 		}
 
 		boost::asio::io_service io_service;
 
-		server::Server(io_service, argv[1], argv[2], server::FileHandler(argv[3]))();
+		server::Server(io_service, std::atoi(argv[1]), server::FileHandler(argv[2]))();
 
 		boost::asio::signal_set signals(io_service);
 		signals.add(SIGINT);

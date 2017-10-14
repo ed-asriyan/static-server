@@ -7,13 +7,10 @@
 
 server::Server::Server(
 	boost::asio::io_service& io_service,
-	const std::string& address,
-	const std::string& port,
+	unsigned short port,
 	boost::function<void(const Request&, Response&)> request_handler
 ) : request_handler(request_handler) {
-	tcp::resolver resolver(io_service);
-	tcp::resolver::query query(address, port);
-	acceptor.reset(new tcp::acceptor(io_service, *resolver.resolve(query)));
+	acceptor.reset(new tcp::acceptor(io_service, tcp::endpoint(tcp::v4(), port)));
 }
 
 void server::Server::operator()(boost::system::error_code ec, size_t length) {

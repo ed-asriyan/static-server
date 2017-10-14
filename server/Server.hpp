@@ -20,8 +20,7 @@ namespace server {
 	public:
 		explicit Server(
 			boost::asio::io_service& io_service,
-			const std::string& address,
-			const std::string& port,
+			unsigned short port,
 			boost::function<void(const Request&, Response&)> request_handler
 		);
 
