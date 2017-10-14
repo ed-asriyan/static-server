@@ -52,14 +52,13 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// fill out the reply to be sent to the client.
 	rep.status = Response::ok;
-	size_t file_size = rep.content.size();
+	size_t file_size = static_cast<size_t>(is.tellg());
 
 	if (req.method == Request::method::GET) {
-		char buf[512];
-		while (is.read(buf, sizeof(buf)).gcount() > 0) {
-			rep.content.append(buf, is.gcount());
-		}
-		file_size = rep.content.size();
+		is.seekg(0, std::ios::end);
+		file_size = static_cast<size_t>(is.tellg()) - file_size;
+		is.seekg(0, std::ios::beg);
+		rep.body = std::move(is);
 	} else if (req.method == Request::method::HEAD) {
 		is.seekg(0, std::ios::end);
 		file_size = static_cast<size_t>(is.tellg()) - file_size;

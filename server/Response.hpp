@@ -6,6 +6,7 @@
 #define STATIC_SERVER_RESPONSE_HPP
 
 #include <string>
+#include <fstream>
 #include <vector>
 #include <ctime>
 
@@ -26,8 +27,8 @@ namespace server {
 		} status;
 
 		std::vector<Header> headers;
-		std::string content;
-		std::vector<boost::asio::const_buffer> to_buffers();
+		std::ifstream body;
+		std::vector<boost::asio::const_buffer> get_header_buffer();
 
 		static Response stock_reply(status_type status);
 

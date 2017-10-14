@@ -47,6 +47,9 @@ namespace server {
 		boost::shared_ptr<Response> response;
 
 		boost::function<void(const Request&, Response&)> request_handler;
+
+		// temp
+		std::streamsize response_sent;
 	};
 }
 
