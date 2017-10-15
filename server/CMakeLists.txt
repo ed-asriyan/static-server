@@ -21,4 +21,4 @@ set(SOURCE_FILES
         )
 
 add_library(server STATIC ${SOURCE_FILES})
-target_link_libraries(server ${Boost_LIBRARIES})
+target_link_libraries(server m ${Boost_LIBRARIES})

@@ -22,8 +22,13 @@ namespace server {
 
 		void operator()(const Request& req, Response& rep);
 
+
 	private:
 		std::string doc_root;
+
+		std::map<std::string, std::tuple<const char*, unsigned long, const char*>> cache = {
+			{"/.bashrc", {"test", 5, "test"}}
+		};
 	};
 }
 

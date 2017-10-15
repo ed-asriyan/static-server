@@ -48,12 +48,19 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 		Response::normalize_headers(*response);
 
 		yield boost::asio::async_write(*socket, response->get_header_buffer(), *this);
-		if (response->body) {
+		if (response->body.first) {
+			response_sent = 0;
 			do {
-				if ((response_sent = response->body.read(buffer->c_array(), sizeof(*buffer)).gcount()) <= 0) break;
-				yield socket->async_write_some(boost::asio::buffer(*buffer, static_cast<size_t>(response_sent)), *this);
+				if (response_sent >= response->body.second) break;
+				yield socket->async_write_some(
+					boost::asio::buffer(
+						response->body.first + response_sent,
+						static_cast<size_t>(BUFFER_SIZE > response->body.second - response_sent ? response->body.second - response_sent : BUFFER_SIZE)
+					),
+					*this
+				);
+				response_sent += Server::BUFFER_SIZE;
 			} while (true);
-			response->body.close();
 		}
 
 		socket->shutdown(tcp::socket::shutdown_both, ec);

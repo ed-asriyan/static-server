@@ -28,7 +28,7 @@ namespace server {
 		} status;
 
 		std::vector<Header> headers;
-		std::ifstream body;
+		std::pair<const char*, size_t> body;
 		std::vector<boost::asio::const_buffer> get_header_buffer();
 
 		static Response stock_reply(status_type status);

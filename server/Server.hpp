@@ -6,6 +6,7 @@
 #define STATIC_SERVER_SERVER_HPP
 
 #include <string>
+#include <algorithm>
 
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
@@ -48,7 +49,7 @@ namespace server {
 		boost::function<void(const Request&, Response&)> request_handler;
 
 		// temp
-		std::streamsize response_sent;
+		size_t response_sent;
 	};
 }
 
