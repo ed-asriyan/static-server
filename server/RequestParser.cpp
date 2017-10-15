@@ -114,12 +114,21 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 		// Parce URI.
 		source_uri.clear();
 		while (!is_ctl(c) && c != ' ') {
+			if (c == '?') break;
 			source_uri.push_back(c);
 			yield RETURN_UNHANDLED;
+		}
+		if (c == '?') {
+			while (!is_ctl(c) && c != ' ') {
+				yield RETURN_UNHANDLED;
+			}
 		}
 		if (source_uri.empty()) RETURN_BAD_REQUEST;
 		if (!uri_decode(source_uri, req.uri)) RETURN_BAD_REQUEST;
 		if (req.uri.empty()) RETURN_BAD_REQUEST;
+		while (!is_ctl(c) && c != ' ') {
+			yield RETURN_UNHANDLED;
+		}
 
 		// Parse space after URI.
 		if (c != ' ') RETURN_BAD_REQUEST;
