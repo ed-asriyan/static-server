@@ -9,12 +9,17 @@
 #include <vector>
 
 namespace server {
+	/**
+	 * A request received from the client.
+	 */
 	struct Request {
 		enum method {
 			GET,
 			HEAD,
 		} method;
+
 		std::string uri;
+
 		int http_version_major;
 		int http_version_minor;
 	};

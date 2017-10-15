@@ -8,6 +8,11 @@
 #include <string>
 
 namespace server {
+	/**
+	 * Convert a file extension into a MIME type.
+	 * @param extension File extension without a begginning dot.
+	 * @return MIME type.
+	 */
 	std::string extension_to_type(const std::string& extension);
 }
 

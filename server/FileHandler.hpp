@@ -16,10 +16,22 @@
 #include "mime_types.hpp"
 
 namespace server {
+	/**
+	 * The common handler for all incoming requests.
+	 */
 	class FileHandler {
 	public:
+		/**
+		 * Construct with a directory containing files to be served.
+		 * @param doc_root The server root directory.
+		 */
 		explicit FileHandler(const std::string& doc_root);
 
+		/**
+		 * Handle a request and generate a response.
+		 * @param req The incoming request.
+		 * @param rep The outcoming response.
+		 */
 		void operator()(const Request& req, Response& rep);
 
 	private:

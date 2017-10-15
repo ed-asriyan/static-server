@@ -1,10 +1,12 @@
-# HTTP Static Server
+# HTTP Static Server [![Build Status](https://travis-ci.org/ed-asriyan/static-server.svg?branch=master)](https://travis-ci.org/ed-asriyan/static-server)
+
 HTTP Static server on `boost::asio` and coroutines.
 
 ## Requirements
-* C++14 compiler
-* cmake 3.9
-* boost libraries 1.65.0 or higher
+* [Make](https://www.gnu.org/software/make/) tool
+* [C++14](https://isocpp.org) compiler
+* [CMake 3.9](https://cmake.org) or higher
+* [boost libraries](http://www.boost.org) 1.65.0 or higher
 
 ## Usage
 ### Build using cmake

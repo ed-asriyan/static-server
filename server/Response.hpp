@@ -18,7 +18,13 @@
 #include "Response.hpp"
 
 namespace server {
+	/**
+	 * A response to be sent to a client.
+	 */
 	struct Response {
+		/**
+		 * The status of the response.
+		 */
 		enum status_type {
 			ok = 200,
 			bad_request = 400,
@@ -27,12 +33,28 @@ namespace server {
 			internal_server_error = 500,
 		} status;
 
+		/// The headers to be included in the reply.
 		std::vector<Header> headers;
+
+		/// The http body.
 		std::ifstream body;
+
+		/**
+		 * Convert the headers into a vector of buffers.
+		 */
 		std::vector<boost::asio::const_buffer> get_header_buffer();
 
+		/**
+		 * Get a stock response.
+		 * @param status HTTP response status.
+		 * @return Stock response.
+		 */
 		static Response stock_reply(status_type status);
 
+		/**
+		 * Include required headers such as date, server and connection to the responce.
+		 * @param response The responce to process.
+		 */
 		static void normalize_headers(Response& response);
 	};
 }
