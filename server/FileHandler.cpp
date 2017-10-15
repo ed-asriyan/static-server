@@ -24,7 +24,7 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// Request path must be absolute and not contain "..".
 	if (request_path.empty() || request_path[0] != '/'
-		|| request_path.find("..") != std::string::npos) {
+		|| request_path.find("/../") != std::string::npos) {
 		rep = Response::stock_reply(Response::bad_request);
 		return;
 	}
