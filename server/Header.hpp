@@ -8,6 +8,9 @@
 #include <string>
 
 namespace server {
+	/**
+	 * The HTTP header.
+	 */
 	struct Header {
 		std::string name;
 		std::string value;
