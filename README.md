@@ -1,4 +1,5 @@
-# HTTP Static Server
+# HTTP Static Server [![Build Status](https://travis-ci.org/ed-asriyan/static-server.svg?branch=master)](https://travis-ci.org/ed-asriyan/static-server)
+
 HTTP Static server on `boost::asio` and coroutines.
 
 ## Requirements
