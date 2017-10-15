@@ -8,7 +8,7 @@
 #include <string>
 
 namespace server {
-	std::string extension_to_type(const std::string& extension);
+	const char* extension_to_type(const std::string& extension);
 }
 
 #endif //STATIC_SERVER_MIME_TYPES_HPP

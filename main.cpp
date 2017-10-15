@@ -27,10 +27,12 @@ int main(int argc, char* argv[]) {
 #endif // defined(SIGQUIT)
 		signals.async_wait(boost::bind(&boost::asio::io_service::stop, &io_service));
 
+		std::cout << "Starting server..." << std::endl;
 		std::vector<std::thread> pool;
 		for (auto threadCount = std::thread::hardware_concurrency(); threadCount; --threadCount) {
 			pool.emplace_back([](auto io_s) { return io_s->run(); }, &io_service);
 		}
+		std::cout << "Server has started" << std::endl;
 
 		for (auto& thread : pool)
 			thread.join();

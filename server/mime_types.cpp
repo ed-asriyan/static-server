@@ -10,18 +10,18 @@ struct mapping {
 	const char* extension;
 	const char* mime_type;
 } mappings[] = {
-	{"html", "text/html"},
-	{"css", "text/css"},
-	{"js", "application/javascript"},
-	{"jpg", "image/jpeg"},
-	{"jpeg", "image/jpeg"},
-	{"png", "image/png"},
-	{"gif", "image/gif"},
-	{"swf", "application/x-shockwave-flash"},
+	{".html", "text/html"},
+	{".css", "text/css"},
+	{".js", "application/javascript"},
+	{".jpg", "image/jpeg"},
+	{".jpeg", "image/jpeg"},
+	{".png", "image/png"},
+	{".gif", "image/gif"},
+	{".swf", "application/x-shockwave-flash"},
 	{0, 0}
 };
 
-std::string server::extension_to_type(const std::string& extension) {
+const char* server::extension_to_type(const std::string& extension) {
 	for (mapping* m = mappings; m->extension; ++m) {
 		if (m->extension == extension) {
 			return m->mime_type;

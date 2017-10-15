@@ -8,8 +8,10 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 
 #include "Response.hpp"
 #include "Request.hpp"
@@ -24,11 +26,14 @@ namespace server {
 
 
 	private:
+		static constexpr unsigned int BUFFER_SIZE = 8192;
+
 		std::string doc_root;
 
-		std::map<std::string, std::tuple<const char*, unsigned long, const char*>> cache = {
-			{"/.bashrc", {"test", 5, "test"}}
-		};
+		std::unordered_map<std::string, std::tuple<const char*, unsigned long, const char*>> cache;
+
+		void read_file(const boost::filesystem::path& path, char* out, unsigned long size);
+		void fill_cache();
 	};
 }
 
