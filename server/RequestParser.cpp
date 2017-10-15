@@ -86,6 +86,7 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 		req.http_version_major = 0;
 		req.http_version_minor = 0;
 
+		// Parsing the method. We support onlu GET & HEAD.
 		if (c == 'G') {
 			yield RETURN_UNHANDLED;
 			if (c != 'E') RETURN_METHOD_NOT_ALLOWED;
@@ -106,11 +107,11 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 			req.method = Request::method::HEAD;
 		} else RETURN_METHOD_NOT_ALLOWED;
 
-		// space
+		// Parce space after method name.
 		if (c != ' ') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 
-		// URI
+		// Parce URI.
 		source_uri.clear();
 		while (!is_ctl(c) && c != ' ') {
 			source_uri.push_back(c);
@@ -120,11 +121,11 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 		if (!uri_decode(source_uri, req.uri)) RETURN_BAD_REQUEST;
 		if (req.uri.empty()) RETURN_BAD_REQUEST;
 
-		// space
+		// Parse space after URI.
 		if (c != ' ') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 
-		// HTTP protocol identifier.
+		// Parse HTTP protocol identifier.
 		if (c != 'H') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 		if (c != 'T') RETURN_BAD_REQUEST;
@@ -134,29 +135,29 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 		if (c != 'P') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 
-		// slash
+		// Parce slash-separator between HTTP and its version.
 		if (c != '/') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 
-		// major version number
+		// Parse major HTTP version.
 		if (!is_digit(c)) RETURN_BAD_REQUEST;
 		while (is_digit(c)) {
 			req.http_version_major = req.http_version_major * 10 + c - '0';
 			yield RETURN_UNHANDLED;
 		}
 
-		// dot
+		// Parse dot between major and minor.
 		if (c != '.') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 
-		// minor version number
+		// Parse minor version.
 		if (!is_digit(c)) RETURN_BAD_REQUEST;
 		while (is_digit(c)) {
 			req.http_version_minor = req.http_version_minor * 10 + c - '0';
 			yield RETURN_UNHANDLED;
 		}
 
-		// CRLF
+		// Parse CRLF.
 		if (c != '\r') RETURN_BAD_REQUEST;
 		yield RETURN_UNHANDLED;
 		if (c != '\n') RETURN_BAD_REQUEST;
@@ -164,6 +165,7 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 
 		// request headers are not supported
 		// request body is not supported
+
 		yield RETURN_OK;
 	}
 
