@@ -10,8 +10,8 @@
 int main(int argc, char* argv[]) {
 	try {
 		if (argc != 3) {
-			std::cerr << "Usage: http_server <port> <doc_root>" << std::endl;
-			std::cerr << "    receiver 80 ." << std::endl;
+			std::cerr << "Usage: static_server <port> <doc_root>" << std::endl;
+			std::cerr << "\tstatic_server 80 ." << std::endl;
 			return 1;
 		}
 
