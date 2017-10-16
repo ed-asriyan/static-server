@@ -7,7 +7,9 @@
 std::string current_date() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-	return std::ctime(&now_time);
+	auto result = std::string(std::ctime(&now_time));
+	*--result.end() = '\0';
+	return result;
 }
 
 namespace server {
@@ -75,7 +77,7 @@ namespace server {
 
 	void Response::normalize_headers(Response& response) {
 		response.headers.push_back({"Server", "static-server-on-boost-coroutines"});
-		response.headers.push_back({"Connection", "Close"});
+		response.headers.push_back({"Connection", "close"});
 		response.headers.push_back({"Date", current_date()});
 	}
 }
