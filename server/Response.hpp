@@ -28,6 +28,7 @@ namespace server {
 		enum status_type {
 			ok = 200,
 			bad_request = 400,
+			forbidden = 403,
 			not_found = 404,
 			method_not_allowed = 405,
 			internal_server_error = 500,

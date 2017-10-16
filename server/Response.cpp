@@ -20,6 +20,9 @@ namespace server {
 		const std::string bad_request =
 			"HTTP/1.0 400 Bad Request\r\n";
 
+		const std::string forbidden =
+			"HTTP/1.0 403 Forbidden\r\n";
+
 		const std::string not_found =
 			"HTTP/1.0 404 Not Found\r\n";
 
@@ -35,6 +38,8 @@ namespace server {
 					return boost::asio::buffer(ok);
 				case Response::bad_request:
 					return boost::asio::buffer(bad_request);
+				case Response::forbidden:
+					return boost::asio::buffer(forbidden);
 				case Response::not_found:
 					return boost::asio::buffer(not_found);
 				case Response::method_not_allowed:
