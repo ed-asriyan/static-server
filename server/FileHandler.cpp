@@ -11,8 +11,8 @@ server::FileHandler::FileHandler(const std::string& doc_root)
 
 void server::FileHandler::operator()(const server::Request& req, server::Response& rep) {
 	switch (req.method) {
-		case Request::method::GET:
-		case Request::method::HEAD:
+		case Request::GET:
+		case Request::HEAD:
 			break;
 		default:
 			rep = Response::stock_reply(Response::method_not_allowed);
@@ -59,12 +59,12 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 	rep.status = Response::ok;
 	size_t file_size = static_cast<size_t>(is.tellg());
 
-	if (req.method == Request::method::GET) {
+	if (req.method == Request::GET) {
 		is.seekg(0, std::ios::end);
 		file_size = static_cast<size_t>(is.tellg()) - file_size;
 		is.seekg(0, std::ios::beg);
 		rep.body = std::move(is);
-	} else if (req.method == Request::method::HEAD) {
+	} else if (req.method == Request::HEAD) {
 		is.seekg(0, std::ios::end);
 		file_size = static_cast<size_t>(is.tellg()) - file_size;
 	}

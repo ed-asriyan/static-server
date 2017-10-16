@@ -94,7 +94,7 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 			if (c != 'T') RETURN_METHOD_NOT_ALLOWED;
 			yield RETURN_UNHANDLED;
 
-			req.method = Request::method::GET;
+			req.method = Request::GET;
 		} else if (c == 'H') {
 			yield RETURN_UNHANDLED;
 			if (c != 'E') RETURN_METHOD_NOT_ALLOWED;
@@ -104,7 +104,7 @@ boost::tuple<bool, server::Response::status_type> server::RequestParser::consume
 			if (c != 'D') RETURN_METHOD_NOT_ALLOWED;
 			yield RETURN_UNHANDLED;
 
-			req.method = Request::method::HEAD;
+			req.method = Request::HEAD;
 		} else RETURN_METHOD_NOT_ALLOWED;
 
 		// Parce space after method name.
