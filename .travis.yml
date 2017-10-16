@@ -8,7 +8,7 @@ before_install:
   - git clone https://github.com/init/http-test-suite.git
 
   - docker build -t static_server .
-  - docker run -d --name static_server -p 80:80 -v http-test-suite:/static static_server
+  - docker run -d --name static_server -p 80:80 -v $PWD/http-test-suite:/static static_server
 
 script:
   - docker start static_server

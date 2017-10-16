@@ -7,7 +7,9 @@
 std::string current_date() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-	return std::ctime(&now_time);
+	auto result = std::string(std::ctime(&now_time));
+	*--result.end() = '\0';
+	return result;
 }
 
 namespace server {
@@ -17,6 +19,9 @@ namespace server {
 
 		const std::string bad_request =
 			"HTTP/1.0 400 Bad Request\r\n";
+
+		const std::string forbidden =
+			"HTTP/1.0 403 Forbidden\r\n";
 
 		const std::string not_found =
 			"HTTP/1.0 404 Not Found\r\n";
@@ -33,6 +38,8 @@ namespace server {
 					return boost::asio::buffer(ok);
 				case Response::bad_request:
 					return boost::asio::buffer(bad_request);
+				case Response::forbidden:
+					return boost::asio::buffer(forbidden);
 				case Response::not_found:
 					return boost::asio::buffer(not_found);
 				case Response::method_not_allowed:
@@ -75,7 +82,7 @@ namespace server {
 
 	void Response::normalize_headers(Response& response) {
 		response.headers.push_back({"Server", "static-server-on-boost-coroutines"});
-		response.headers.push_back({"Connection", "Close"});
+		response.headers.push_back({"Connection", "close"});
 		response.headers.push_back({"Date", current_date()});
 	}
 }

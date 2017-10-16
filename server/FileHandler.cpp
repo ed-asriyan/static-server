@@ -24,13 +24,14 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// Request path must be absolute and not contain "..".
 	if (request_path.empty() || request_path[0] != '/'
-		|| request_path.find("..") != std::string::npos) {
+		|| request_path.find("/../") != std::string::npos) {
 		rep = Response::stock_reply(Response::bad_request);
 		return;
 	}
 
 	// If path ends in slash (i.e. is a directory) then add "index.html".
-	if (request_path[request_path.size() - 1] == '/') {
+	bool is_index;
+	if ((is_index = request_path[request_path.size() - 1] == '/')) {
 		request_path += "index.html";
 	}
 
@@ -38,7 +39,11 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 	std::string full_path = doc_root + request_path;
 	std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
 	if (!is) {
-		rep = Response::stock_reply(Response::not_found);
+		if (is_index) {
+			rep = Response::stock_reply(Response::forbidden);
+		} else {
+			rep = Response::stock_reply(Response::not_found);
+		}
 		return;
 	}
 
