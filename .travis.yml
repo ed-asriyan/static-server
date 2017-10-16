@@ -1,0 +1,19 @@
+language: cpp
+sudo: false
+
+services:
+  - docker
+
+before_install:
+  - git clone https://github.com/init/http-test-suite.git
+
+  - docker build -t static_server .
+  - docker run -d --name static_server -p 80:80 -v $PWD/http-test-suite:/static static_server
+
+script:
+  - docker start static_server
+  - cd http-test-suite
+  - ./httptest.py &> test_results.txt
+  - docker stop static_server
+  - cat test_results.txt
+  - grep -q OK test_results.txt
