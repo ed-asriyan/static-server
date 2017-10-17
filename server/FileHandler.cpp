@@ -37,7 +37,7 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// Open the file to send back.
 	std::string full_path = doc_root + request_path;
-	std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
+	FILE* is = std::fopen(full_path.c_str(), "rb");
 	if (!is) {
 		if (is_index) {
 			rep = Response::stock_reply(Response::forbidden);
@@ -57,16 +57,16 @@ void server::FileHandler::operator()(const server::Request& req, server::Respons
 
 	// Fill out the reply to be sent to the client.
 	rep.status = Response::ok;
-	size_t file_size = static_cast<size_t>(is.tellg());
+	size_t file_size = static_cast<size_t>(ftell(is));
 
 	if (req.method == Request::GET) {
-		is.seekg(0, std::ios::end);
-		file_size = static_cast<size_t>(is.tellg()) - file_size;
-		is.seekg(0, std::ios::beg);
+		std::fseek(is, 0, SEEK_END);
+		file_size = static_cast<size_t>(ftell(is)) - file_size;
+		fseek(is, 0, SEEK_SET);
 		rep.body = std::move(is);
 	} else if (req.method == Request::HEAD) {
-		is.seekg(0, std::ios::end);
-		file_size = static_cast<size_t>(is.tellg()) - file_size;
+		fseek(is, 0, SEEK_END);
+		file_size = static_cast<size_t>(ftell(is)) - file_size;
 	}
 
 	rep.headers.resize(2);

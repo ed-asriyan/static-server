@@ -7,7 +7,7 @@
 
 #include <string>
 #include <fstream>
-#include <sstream>
+#include <cstdio>
 
 #include <boost/lexical_cast.hpp>
 

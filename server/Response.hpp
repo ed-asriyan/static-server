@@ -38,7 +38,7 @@ namespace server {
 		std::vector<Header> headers;
 
 		/// The http body.
-		std::ifstream body;
+		FILE* body;
 
 		/**
 		 * Convert the headers into a vector of buffers.

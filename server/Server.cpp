@@ -5,6 +5,8 @@
 #include "Server.hpp"
 #include <boost/asio/yield.hpp>
 
+#define push_file(ofd, ifd, offset, length) sendfile((ofd), (ifd), &(offset), (length))
+
 server::Server::Server(
 	boost::asio::io_service& io_service,
 	unsigned short port,
@@ -61,12 +63,14 @@ void server::Server::operator()(boost::system::error_code ec, size_t length) {
 
 		// Send the body if it exists. Send it by parts with size of the buffer.
 		if (response->body) {
+		response_sent = 0;
+			fd = fileno(response->body);
 			do {
-				if ((response_sent = response->body.read(buffer->c_array(), sizeof(*buffer)).gcount()) <= 0) break;
-				yield socket->async_write_some(boost::asio::buffer(*buffer, static_cast<size_t>(response_sent)), *this);
+				if (!push_file(socket->native(), fd, response_sent, Server::BUFFER_SIZE)) break;
+				yield;
 			} while (true);
 			// Close the file stream.
-			response->body.close();
+			fclose(response->body);
 		}
 
 		// Close the connection.

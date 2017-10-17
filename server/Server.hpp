@@ -5,6 +5,8 @@
 #ifndef STATIC_SERVER_SERVER_HPP
 #define STATIC_SERVER_SERVER_HPP
 
+#include <sys/sendfile.h>
+
 #include <string>
 
 #include <boost/asio.hpp>
@@ -74,6 +76,9 @@ namespace server {
 
 		/// The nubmer of bytes sent to the client.
 		std::streamsize response_sent;
+
+		// Current file descriptor
+		int fd;
 
 		/// The user-supplied handler for all incoming requests.
 		boost::function<void(const Request&, Response&)> request_handler;
