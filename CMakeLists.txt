@@ -10,4 +10,4 @@ find_package(Threads REQUIRED)
 
 set(SOURCE_FILES main.cpp)
 add_executable(static_server ${SOURCE_FILES})
-target_link_libraries(static_server server Threads::Threads)
+target_link_libraries(static_server server optimized Threads::Threads)
